@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,9 +21,9 @@ import com.utils.StringConstants;
 /**
  * Controller class
  * @author Anish
- *
  */
 @RestController
+@CrossOrigin
 public class EventsController {
 	
 	@Autowired
@@ -30,7 +32,8 @@ public class EventsController {
 	 * The method to return All TODOS 
 	 * @return
 	 */
-	@RequestMapping(value="/events", method=RequestMethod.GET)
+	@RequestMapping(value="/events", method=RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
     public List<EventForm> getAllTodos() {
     	Iterable<EventDto> eventsDtoList = eventRepository.findAll();
@@ -47,19 +50,22 @@ public class EventsController {
 	/**
 	 * The method to save the Todo
 	 */
-    @RequestMapping(value="/events", method=RequestMethod.POST)
-    public String createEvent(@RequestBody EventForm eventForm) {
+    @RequestMapping(value="/events", method=RequestMethod.POST, 
+    		consumes = MediaType.APPLICATION_JSON_VALUE,
+    		produces = MediaType.APPLICATION_JSON_VALUE)
+    public EventForm createEvent(@RequestBody EventForm eventForm) {
     	EventDto event= new EventDto();
     	BeanUtils.copyProperties(eventForm, event);
     	eventRepository.save(event);
-        return StringConstants.SUCCESS;
+        return eventForm;
     }
     /**
      * The method to get the TODO based on id
      * @param id
      * @return
      */
-    @RequestMapping(value="/events/{id}", method=RequestMethod.GET)
+    @RequestMapping(value="/events/{id}", method=RequestMethod.GET,
+    		produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public EventForm findEventById(@PathVariable("id") String id) {
     	EventDto event = eventRepository.findOne(Long.parseLong(id));
@@ -75,7 +81,9 @@ public class EventsController {
      * @param eventForm
      * @return
      */
-    @RequestMapping(value="/events/{id}", method=RequestMethod.POST)
+    @RequestMapping(value="/events/{id}", method=RequestMethod.POST,
+    		consumes = MediaType.APPLICATION_JSON_VALUE,
+    		produces = MediaType.TEXT_PLAIN_VALUE)
     public String updateEvent(@PathVariable("id") String id,
                                            @RequestBody EventForm eventForm) {
     	EventDto event = eventRepository.findOne(Long.parseLong(id));

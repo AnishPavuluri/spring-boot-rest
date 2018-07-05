@@ -1,8 +1,7 @@
 package com.event.form;
 /**
- * Form class for TODO
+ * Form class for Event
  * @author Anish
- *
  */
 public class EventForm {
 	

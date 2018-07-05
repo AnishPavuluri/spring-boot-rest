@@ -3,7 +3,10 @@ package com.event.dto;
 import java.io.Serializable;
 
 import javax.persistence.*;
-
+/**
+ * Event Dto
+ * @author Anish
+ */
 @Entity
 @Table(name="EVENT")
 public class EventDto implements Serializable {
